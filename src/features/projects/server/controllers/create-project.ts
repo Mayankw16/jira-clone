@@ -1,0 +1,63 @@
+import { createFactory } from "hono/factory";
+import { zValidator } from "@hono/zod-validator";
+import { ID } from "node-appwrite";
+
+import { sessionMiddleware } from "@/lib/session-middleware";
+import { BUCKET_ID, DATABASE_ID, PROJECTS_ID } from "@/config";
+
+import { createProjectSchema } from "../../schemas";
+import { getMember } from "@/features/members/utils";
+
+const factory = createFactory();
+
+export const createProject = factory.createHandlers(
+  zValidator("form", createProjectSchema),
+  sessionMiddleware,
+  async (c) => {
+    const databases = c.get("databases");
+    const storage = c.get("storage");
+    const user = c.get("user");
+
+    const { name, image, workspaceId } = c.req.valid("form");
+
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) {
+      return c.json({ error: "Unathorized" }, 401);
+    }
+
+    let uploadedImageURL: string | undefined;
+
+    if (image instanceof File) {
+      const file = await storage.createFile({
+        bucketId: BUCKET_ID,
+        fileId: ID.unique(),
+        file: image,
+      });
+
+      const arrayBuffer = await storage.getFileView({
+        bucketId: BUCKET_ID,
+        fileId: file.$id,
+      });
+
+      uploadedImageURL = `data:image/png;base64,${Buffer.from(arrayBuffer).toString("base64")}`;
+    } else uploadedImageURL = image;
+
+    const project = await databases.createRow({
+      databaseId: DATABASE_ID,
+      tableId: PROJECTS_ID,
+      rowId: ID.unique(),
+      data: {
+        name,
+        imageURL: uploadedImageURL,
+        workspaceId,
+      },
+    });
+
+    return c.json({ data: project });
+  },
+);
