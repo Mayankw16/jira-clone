@@ -109,7 +109,7 @@ export const TaskList = ({ tasks }: TaskListProps) => {
               </Link>
             </li>
           ))}
-          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
+          <li className="mt-20 text-sm text-muted-foreground text-center hidden first-of-type:block">
             No tasks found
           </li>
         </ul>
@@ -159,7 +159,7 @@ export const ProjectList = ({ projects }: ProjectListProps) => {
               </Link>
             </li>
           ))}
-          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
+          <li className="mt-20 text-sm text-muted-foreground text-center hidden first-of-type:block">
             No projects found
           </li>
         </ul>
@@ -189,7 +189,10 @@ export const MembersList = ({ members }: MembersListProps) => {
         <DottedSeparator className="mt-4" />
         <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-93 overflow-scroll hide-scrollbar">
           {members.map((member) => (
-            <li key={member.$id} className="mb-4 first-of-type:mt-4">
+            <li
+              key={member.$id}
+              className="mb-4 first-of-type:mt-4 nth-[2]:mt-4"
+            >
               <Card className="shadow-none rounded-lg overflow-hidden border ring-0">
                 <CardContent className="flex flex-col items-center gap-x-2">
                   <MemberAvatar className="size-12 mb-2" name={member.name} />
@@ -205,7 +208,7 @@ export const MembersList = ({ members }: MembersListProps) => {
               </Card>
             </li>
           ))}
-          <li className="text-sm text-muted-foreground text-center hidden first-of-type:block">
+          <li className="mt-20 text-sm text-muted-foreground text-center hidden first-of-type:block">
             No members found
           </li>
         </ul>
