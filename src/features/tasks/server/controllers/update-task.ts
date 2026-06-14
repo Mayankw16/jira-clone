@@ -1,6 +1,6 @@
+import { z } from "zod";
 import { createFactory } from "hono/factory";
 import { zValidator } from "@hono/zod-validator";
-import { z } from "zod";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { getMember, getMemberById } from "@/features/members/utils";

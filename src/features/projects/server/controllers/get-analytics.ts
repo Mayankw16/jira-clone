@@ -1,5 +1,7 @@
+import { z } from "zod";
 import { Query } from "node-appwrite";
 import { createFactory } from "hono/factory";
+import { zValidator } from "@hono/zod-validator";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
@@ -13,10 +15,16 @@ const factory = createFactory();
 
 export const getAnalytics = factory.createHandlers(
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      projectId: z.string(),
+    }),
+  ),
   async (c) => {
     const user = c.get("user");
     const databases = c.get("databases");
-    const projectId = c.req.param("projectId")!;
+    const { projectId } = c.req.valid("param");
 
     const project = await databases.getRow<Project>({
       databaseId: DATABASE_ID,

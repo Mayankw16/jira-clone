@@ -12,8 +12,8 @@ import { createWorkspaceSchema } from "../../schemas";
 const factory = createFactory();
 
 export const createWorkspace = factory.createHandlers(
-  zValidator("form", createWorkspaceSchema),
   sessionMiddleware,
+  zValidator("form", createWorkspaceSchema),
   async (c) => {
     const databases = c.get("databases");
     const storage = c.get("storage");

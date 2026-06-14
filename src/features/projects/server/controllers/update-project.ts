@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { createFactory } from "hono/factory";
 import { zValidator } from "@hono/zod-validator";
 import { ID } from "node-appwrite";
@@ -13,12 +14,18 @@ const factory = createFactory();
 export const updateProject = factory.createHandlers(
   zValidator("form", updateProjectSchema),
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      projectId: z.string(),
+    }),
+  ),
   async (c) => {
     const databases = c.get("databases");
     const storage = c.get("storage");
     const user = c.get("user");
 
-    const projectId = c.req.param("projectId")!;
+    const { projectId } = c.req.valid("param");
     const { name, image } = c.req.valid("form");
 
     const projectToUpdate = await databases.getRow({

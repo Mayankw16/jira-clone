@@ -10,6 +10,8 @@ import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Button } from "@/components/ui/button";
 import { Analytics } from "@/components/analytics";
+import { Loader } from "@/components/loader";
+import { Error } from "@/components/error";
 
 export const ProjectClient = () => {
   const projectId = useProjectId();
@@ -21,9 +23,12 @@ export const ProjectClient = () => {
 
   const isLoading = isLoadingProject || isLoadingAnalytics;
 
-  // TDOD: improve this
-  if (isLoading) return <h1>Loading...</h1>;
-  if (!project) return <h1>Project not found!</h1>;
+  if (isLoading) return <Loader />;
+
+  if (!project)
+    return (
+      <Error message="This project either does not exist or you are not authorized to access it." />
+    );
 
   return (
     <div className="flex flex-col gap-y-4">

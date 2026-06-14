@@ -23,7 +23,7 @@ export default function DashboardLayout({
         <div className="lg:pl-64 w-full">
           <div className="mx-auto max-w-7xl">
             <Navbar />
-            <main className="py-8 px-6 flex flex-col">{children}</main>
+            <main className="py-8 px-6 flex flex-col pt-30">{children}</main>
           </div>
         </div>
       </div>

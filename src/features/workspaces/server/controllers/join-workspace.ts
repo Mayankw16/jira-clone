@@ -1,7 +1,7 @@
+import { z } from "zod";
 import { createFactory } from "hono/factory";
 import { zValidator } from "@hono/zod-validator";
 import { ID } from "node-appwrite";
-import { z } from "zod";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { MemberRole } from "@/features/members/types";
@@ -13,8 +13,14 @@ const factory = createFactory();
 export const joinWorkspace = factory.createHandlers(
   zValidator("json", z.object({ inviteCode: z.string() })),
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      workspaceId: z.string(),
+    }),
+  ),
   async (c) => {
-    const workspaceId = c.req.param("workspaceId")!;
+    const { workspaceId } = c.req.valid("param");
     const { inviteCode } = c.req.valid("json");
 
     const databases = c.get("databases");

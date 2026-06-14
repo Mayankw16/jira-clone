@@ -1,8 +1,10 @@
 "use client";
 
+import { Loader } from "@/components/loader";
 import { useGetProject } from "@/features/projects/api/use-get-project";
 import { UpdateProjectForm } from "@/features/projects/components/update-project-form";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
+import { Error } from "@/components/error";
 
 export const ProjectSettingsClient = () => {
   const projectId = useProjectId();
@@ -11,9 +13,12 @@ export const ProjectSettingsClient = () => {
     projectId,
   });
 
-  // TODO: improve this
-  if (isLoadingProject) return <h1>Laoding...</h1>;
-  if (!project) return <h1>No project found</h1>;
+  if (isLoadingProject) return <Loader />;
+
+  if (!project)
+    return (
+      <Error message="This project either does not exist or you are not authorized to access it." />
+    );
 
   return <UpdateProjectForm project={project} />;
 };

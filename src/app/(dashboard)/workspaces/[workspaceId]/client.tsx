@@ -26,6 +26,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
+import { Loader } from "@/components/loader";
+import { Error } from "@/components/error";
 
 export const WorkspaceClient = () => {
   const workspaceId = useWorkspaceId();
@@ -48,10 +50,12 @@ export const WorkspaceClient = () => {
     isLoadingProjects ||
     isLoadingMembers;
 
-  // TODO: improve this
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading) return <Loader />;
+
   if (!analytics || !tasks || !projects || !members)
-    return <h1>Failed to load workspace data!</h1>;
+    return (
+      <Error message="This workspace either does not exist or you are not authorized to access it." />
+    );
 
   return (
     <div className="h-full flex flex-col space-y-4">

@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DatePicker } from "@/components/date-picker";
 
 import { useTaskFilters } from "../hooks/use-task-filters";
@@ -68,8 +69,15 @@ export const DataFilters = ({ hideProjectFilters }: DataFiltersProps) => {
     setFilters({ projectId: value === "all" ? null : value });
   };
 
-  // TODO: create loader
-  if (isLoading) return null;
+  if (isLoading)
+    return (
+      <div className="flex flex-col lg:flex-row items-center gap-x-2">
+        <Skeleton className="h-8 rounded-md w-40 bg-neutral-200" />
+        <Skeleton className="h-8 rounded-md w-40 bg-neutral-200" />
+        <Skeleton className="h-8 rounded-md w-40 bg-neutral-200" />
+        <Skeleton className="h-8 rounded-md w-40 bg-neutral-200" />
+      </div>
+    );
 
   return (
     <div className="flex flex-col lg:flex-row gap-2">

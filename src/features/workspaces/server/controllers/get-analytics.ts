@@ -1,6 +1,8 @@
+import { z } from "zod";
 import { Query } from "node-appwrite";
 import { createFactory } from "hono/factory";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
+import { zValidator } from "@hono/zod-validator";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { TaskStatus } from "@/features/tasks/types";
@@ -11,10 +13,16 @@ const factory = createFactory();
 
 export const getAnalytics = factory.createHandlers(
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      workspaceId: z.string(),
+    }),
+  ),
   async (c) => {
     const user = c.get("user");
     const databases = c.get("databases");
-    const workspaceId = c.req.param("workspaceId")!;
+    const { workspaceId } = c.req.valid("param");
 
     const member = await getMember({
       databases,

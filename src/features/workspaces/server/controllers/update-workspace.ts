@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { createFactory } from "hono/factory";
 import { zValidator } from "@hono/zod-validator";
 import { ID } from "node-appwrite";
@@ -14,12 +15,18 @@ const factory = createFactory();
 export const updateWorkspace = factory.createHandlers(
   zValidator("form", updateWorkspaceSchema),
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      workspaceId: z.string(),
+    }),
+  ),
   async (c) => {
     const databases = c.get("databases");
     const storage = c.get("storage");
     const user = c.get("user");
 
-    const workspaceId = c.req.param("workspaceId")!;
+    const { workspaceId } = c.req.valid("param");
     const { name, image } = c.req.valid("form");
 
     const member = await getMember({

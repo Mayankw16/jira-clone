@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { createFactory } from "hono/factory";
+import { zValidator } from "@hono/zod-validator";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { MemberRole } from "@/features/members/types";
@@ -10,11 +12,17 @@ const factory = createFactory();
 
 export const resetInviteCode = factory.createHandlers(
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      workspaceId: z.string(),
+    }),
+  ),
   async (c) => {
     const databases = c.get("databases");
     const user = c.get("user");
 
-    const workspaceId = c.req.param("workspaceId")!;
+    const { workspaceId } = c.req.valid("param");
 
     const member = await getMember({
       databases,

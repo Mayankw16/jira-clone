@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { createFactory } from "hono/factory";
+import { zValidator } from "@hono/zod-validator";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { DATABASE_ID, TASKS_ID } from "@/config";
@@ -8,11 +10,17 @@ const factory = createFactory();
 
 export const deleteTask = factory.createHandlers(
   sessionMiddleware,
+  zValidator(
+    "param",
+    z.object({
+      taskId: z.string(),
+    }),
+  ),
   async (c) => {
     const user = c.get("user");
     const databases = c.get("databases");
 
-    const taskId = c.req.param("taskId")!;
+    const { taskId } = c.req.valid("param");
 
     const taskToDelete = await databases.getRow({
       databaseId: DATABASE_ID,

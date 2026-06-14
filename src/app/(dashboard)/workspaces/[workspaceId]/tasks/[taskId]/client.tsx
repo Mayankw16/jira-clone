@@ -1,6 +1,8 @@
 "use client";
 
 import { DottedSeparator } from "@/components/dotted-seperator";
+import { Error } from "@/components/error";
+import { Loader } from "@/components/loader";
 import { useGetTask } from "@/features/tasks/api/use-get-task";
 import { TaskBreadcrumbs } from "@/features/tasks/components/task-breadcrumbs";
 import { TaskDescription } from "@/features/tasks/components/task-description";
@@ -11,9 +13,12 @@ export const TaskClient = () => {
   const taskId = useTaskId();
   const { data: task, isLoading: isLoadingTask } = useGetTask({ taskId });
 
-  // TODO: improve this
-  if (isLoadingTask) return <h1>Loading...</h1>;
-  if (!task) return <h1>Task not found...</h1>;
+  if (isLoadingTask) return <Loader />;
+
+  if (!task)
+    return (
+      <Error message="This task either does not exist or you are not authorized to access it." />
+    );
 
   return (
     <div className="flex flex-col">

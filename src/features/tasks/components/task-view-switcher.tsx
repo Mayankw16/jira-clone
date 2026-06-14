@@ -19,6 +19,7 @@ import { DataTable } from "./data-table";
 import { DataKanban } from "./data-kanban";
 import { TaskStatus } from "../types";
 import { columns } from "./columns";
+import { DataCalendar } from "./data-calendar";
 
 export type UpdateTasksPayload = {
   $id: string;
@@ -65,14 +66,23 @@ export const TaskViewSwitcher = ({
     >
       <div className="flex flex-col p-4">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-y-2">
-          <TabsList className="w-full lg:w-auto">
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="table">
+          <TabsList className="w-full lg:w-auto bg-transparent gap-x-2">
+            <TabsTrigger
+              className="h-8 w-full lg:w-auto bg-neutral-100 data-[state=active]:bg-neutral-200 data-[state=active]:text-black data-[state=active]:shadow-none"
+              value="table"
+            >
               Table
             </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="kanban">
+            <TabsTrigger
+              className="h-8 w-full lg:w-auto bg-neutral-100 data-[state=active]:bg-neutral-200 data-[state=active]:text-black data-[state=active]:shadow-none"
+              value="kanban"
+            >
               Kanban
             </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
+            <TabsTrigger
+              className="h-8 w-full lg:w-auto bg-neutral-100 data-[state=active]:bg-neutral-200 data-[state=active]:text-black data-[state=active]:shadow-none"
+              value="calendar"
+            >
               Calendar
             </TabsTrigger>
           </TabsList>
@@ -97,7 +107,7 @@ export const TaskViewSwitcher = ({
               <DataKanban data={tasks?.rows ?? []} onChange={onKanbanChange} />
             </TabsContent>
             <TabsContent value="calendar" className="mt-0">
-              {JSON.stringify(tasks, null, 2)}
+              <DataCalendar data={tasks?.rows ?? []} />
             </TabsContent>
           </>
         )}

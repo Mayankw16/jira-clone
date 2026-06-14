@@ -5,6 +5,7 @@ import { InferResponseType } from "hono";
 
 type ResponseType = InferResponseType<(typeof client.api.members)["$get"], 200>;
 export type Members = ResponseType["data"]["rows"];
+export type Member = Members[number];
 
 interface UseGetMembersProps {
   workspaceId: string;
